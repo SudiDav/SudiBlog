@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace SudiBlog.Models
@@ -13,5 +14,6 @@ namespace SudiBlog.Models
         public string Text { get; set; }
         public virtual Post Post { get; set; }
         public virtual IdentityUser Author { get; set; }
+        public virtual ICollection<Post> Posts { get; set; } = new HashSet<Post>();
     }
 }

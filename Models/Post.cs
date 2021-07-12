@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -31,5 +33,11 @@ namespace SudiBlog.Models
         public string COntentType { get; set; }
         [NotMapped]
         public IFormFile Image { get; set; }
+
+        //Navigation properties
+        public virtual Blog Blog { get; set; }
+        public virtual IdentityUser Author { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
+        public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
     }
 }
