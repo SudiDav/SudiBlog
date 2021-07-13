@@ -9,7 +9,7 @@ namespace SudiBlog.Models
     public class Blog
     {
         public int Id { get; set; }
-        public string AuthorId { get; set; }
+        public string BlogUserId { get; set; }
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {3} and at most {1} characters.", MinimumLength = 3)]
         public string Name { get; set; }

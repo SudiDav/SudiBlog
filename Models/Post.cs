@@ -30,7 +30,7 @@ namespace SudiBlog.Models
         public string Slug { get; set; }
         public byte[] ImageData { get; set; }
         [Display(Name = "Image Type")]
-        public string COntentType { get; set; }
+        public string ContentType { get; set; }
         [NotMapped]
         public IFormFile Image { get; set; }
 
