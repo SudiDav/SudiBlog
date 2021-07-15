@@ -11,10 +11,10 @@ namespace SudiBlog.Models
         public int Id { get; set; }
         public string BlogUserId { get; set; }
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {3} and at most {1} characters.", MinimumLength = 3)]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at most {1} characters.", MinimumLength = 3)]
         public string Name { get; set; }
         [Required]
-        [StringLength(500, ErrorMessage = "The {0} must be at least {3} and at most {1} characters.", MinimumLength = 3)]
+        [StringLength(500, ErrorMessage = "The {0} must be at least {2} and at most {1} characters.", MinimumLength = 3)]
         public string Description { get; set; }
         [DataType(DataType.Date)]
         [Display(Name = "Created Date")]
@@ -29,6 +29,7 @@ namespace SudiBlog.Models
         public IFormFile Image { get; set; }
 
         //Navigation property
+        [Display(Name = "Author")]
         public virtual BlogUser BlogUser { get; set; }
         public virtual ICollection<Post> Posts { get; set; } = new HashSet<Post>();
     }
