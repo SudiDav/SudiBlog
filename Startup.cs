@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SudiBlog.Data;
 using SudiBlog.Models;
+using SudiBlog.Services;
+using SudiBlog.ViewModels;
 
 namespace SudiBlog
 {
@@ -28,9 +30,6 @@ namespace SudiBlog
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
-
             services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddDefaultUI()
                 .AddDefaultTokenProviders()
@@ -38,6 +37,9 @@ namespace SudiBlog
             services.AddControllersWithViews();
 
             services.AddRazorPages();
+
+            services.AddScoped<DataService>();
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

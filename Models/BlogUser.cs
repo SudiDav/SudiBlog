@@ -13,8 +13,12 @@ namespace SudiBlog.Models
         public string FirstName { get; set; }
         [Required]
         [StringLength(50, ErrorMessage = "The {0} must be at a leat {2} and no more than {1} characters long.", MinimumLength = 3)]
-        public string LastName { get; set; }
         [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+        [Required]
+        [StringLength(50, ErrorMessage = "The {0} must be at a leat {2} and no more than {1} characters long.", MinimumLength = 3)]
+        [Display(Name = "Display Name")]
+        public string DisplayName { get; set; }
         public byte[] ImageData { get; set; }
         [Display(Name = "Image Type")]
         public string ContentType { get; set; }
