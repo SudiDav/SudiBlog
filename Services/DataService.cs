@@ -54,8 +54,8 @@ namespace SudiBlog.Services
 
             var adminUser = new BlogUser
             {
-                Email = "sudimayenge@gmail.com",
-                UserName = "sudimayenge@gmail.com",
+                Email = "sudisimbadav@gmail.com",
+                UserName = "sudisimbadav@gmail.com",
                 FirstName = "Sudi",
                 LastName = "Dav",
                 DisplayName = "Admin",
@@ -69,8 +69,8 @@ namespace SudiBlog.Services
 
             var modUser = new BlogUser
             {
-                Email = "simbamayenge@gmail.com",
-                UserName = "simbamayenge@gmail.com",
+                Email = "sudi@la-difference.com",
+                UserName = "sudi@la-difference.com",
                 FirstName = "Simba",
                 LastName = "Petit",
                 DisplayName = "Moderator",
