@@ -9,9 +9,11 @@ namespace SudiBlog.ViewModels
         public string Name { get; set; }
         [Required]
         [EmailAddress]
+        [Display(Name = "Email Address")]
         [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at most {1} characters.", MinimumLength = 3)]
         public string Email { get; set; }
         [Phone]
+        [Display(Name = "Phone Number")]
         public string Phone { get; set; }
         [Required]
         [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at most {1} characters.", MinimumLength = 3)]
