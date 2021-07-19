@@ -24,7 +24,7 @@ namespace SudiBlog.Services
             email.Subject = subject;
 
             var builder = new BodyBuilder();
-            builder.HtmlBody = $"<b>{name} </b> has sent you an email and can be reached at : <b>{emailFrom}</b>. </br></br>{htmlMessage} ";
+            builder.HtmlBody = $"<b>{name} </b> has sent you an email and can be reached at : <b>{emailFrom}</b>. <br/><br/>{htmlMessage} ";
 
             email.Body = builder.ToMessageBody();
 
