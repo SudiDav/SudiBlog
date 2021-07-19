@@ -1,17 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SudiBlog.Models;
+using SudiBlog.Services;
+using SudiBlog.ViewModels;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace SudiBlog.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IBlogEmailSender _emailSender;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IBlogEmailSender emailSender)
         {
             _logger = logger;
+            _emailSender = emailSender;
         }
 
         public IActionResult Index()
@@ -25,6 +30,13 @@ namespace SudiBlog.Controllers
         }
 
         public IActionResult Contact()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Contact(ContactMe model)
         {
             return View();
         }
