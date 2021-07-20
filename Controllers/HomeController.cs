@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SudiBlog.Models;
-using System;
-using System.Collections.Generic;
+using SudiBlog.Services;
+using SudiBlog.ViewModels;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SudiBlog.Controllers
@@ -12,10 +11,12 @@ namespace SudiBlog.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IBlogEmailSender _emailSender;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IBlogEmailSender emailSender)
         {
             _logger = logger;
+            _emailSender = emailSender;
         }
 
         public IActionResult Index()
@@ -23,9 +24,23 @@ namespace SudiBlog.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult About()
         {
             return View();
+        }
+
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Contact(ContactMe model)
+        {
+            model.Message = $"{model.Message} <hr/> Phone: {model.Phone}";
+            await _emailSender.SendContactEmailAsync(model.Email, model.Name, model.Subject, model.Message);
+            return RedirectToAction(nameof(Index));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

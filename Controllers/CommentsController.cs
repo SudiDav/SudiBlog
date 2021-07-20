@@ -18,41 +18,38 @@ namespace SudiBlog.Controllers
         }
 
         // GET: Comments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> OriginIndex()
         {
-            var applicationDbContext = _context.Comments.Include(c => c.BlogUser).Include(c => c.Moderator).Include(c => c.Post);
-            return View(await applicationDbContext.ToListAsync());
+            var originalComments = await _context.Comments.ToListAsync();
+            return View("Index", originalComments);
         }
 
-        // GET: Comments/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> ModeratedIndex()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var moderatedComments = await _context.Comments.Where(c => c.Moderated != null).ToListAsync();
+            return View("Index", moderatedComments);
+        }
+        //public async Task<IActionResult> DeletedIndex()
+        //{
+        //    var deletedComments = await _context.Comments.Where(c => c.Deleted = true).ToListAsync();
+        //    return View("Index", deletedComments);
+        //    perform a soft delete
+        //}
 
-            var comment = await _context.Comments
-                .Include(c => c.BlogUser)
-                .Include(c => c.Moderator)
-                .Include(c => c.Post)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-
-            return View(comment);
+        public async Task<IActionResult> Index()
+        {
+            var allComments = await _context.Comments.ToListAsync();
+            return View("Index", allComments);
         }
 
         // GET: Comments/Create
-        public IActionResult Create()
-        {
-            ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["ModeratorId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Abstract");
-            return View();
-        }
+        //public IActionResult Create()
+        //{
+        //    ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id");
+        //    ViewData["ModeratorId"] = new SelectList(_context.Users, "Id", "Id");
+        //    ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Abstract");
+        //    return View();
+        //}
 
         // POST: Comments/Create
         [HttpPost]
@@ -65,9 +62,7 @@ namespace SudiBlog.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id", comment.BlogUserId);
-            ViewData["ModeratorId"] = new SelectList(_context.Users, "Id", "Id", comment.ModeratorId);
-            ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Abstract", comment.PostId);
+
             return View(comment);
         }
 
