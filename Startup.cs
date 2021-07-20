@@ -41,6 +41,8 @@ namespace SudiBlog
             services.AddScoped<DataService>();
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddScoped<IBlogEmailSender, EmailService>();
+            services.AddScoped<IImageService, BasicImageService>();
+            services.AddScoped<ISlugService, BasicSlugService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

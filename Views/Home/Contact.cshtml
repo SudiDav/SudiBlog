@@ -8,21 +8,21 @@
             <form asp-action="Contact">
                 <div class="control-group">
                     <div class="form-group floating-label-form-group controls">
-                        <label asp-for="Name"></label>
+                        <label>Name</label>
                         <input asp-for="Name" type="text" class="form-control" placeholder="Name" required data-validation-required-message="Please enter your name.">
                         <p class="help-block text-danger"></p>
                     </div>
                 </div>
                 <div class="control-group">
                     <div class="form-group floating-label-form-group controls">
-                        <label asp-for="Email"></label>
+                        <label>Email Address</label>
                         <input asp-for="Email" type="email" class="form-control" placeholder="Email Address" required data-validation-required-message="Please enter your email address.">
                         <p class="help-block text-danger"></p>
                     </div>
                 </div>
                 <div class="control-group">
                     <div class="form-group col-xs-12 floating-label-form-group controls">
-                        <label asp-for="Phone"></label>
+                        <label>Phone Number</label>
                         <input asp-for="Phone" type="tel" class="form-control" placeholder="Phone Number" required data-validation-required-message="Please enter your phone number.">
                         <p class="help-block text-danger"></p>
                     </div>
@@ -36,12 +36,12 @@
                 </div>
                 <div class="control-group">
                     <div class="form-group floating-label-form-group controls">
-                        <label asp-for="Message"></label>
-                        <textarea asp-for="Message" id="Message" rows="5" class="form-control" required data-validation-required-message="Please enter a message."></textarea>
+                        <label>Message</label>
+                        <textarea asp-for="Message" id="Message" rows="5" class="form-control" required data-validation-required-message="Please enter a message." placeholder="Message"></textarea>
                         <p class="help-block text-danger"></p>
                     </div>
                 </div>
-                <br>
+                <br />
                 <div id="success"></div>
                 <button type="submit" class="btn btn-primary" id="sendMessageButton">Send</button>
             </form>
