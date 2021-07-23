@@ -37,7 +37,7 @@
                 <div class="control-group">
                     <div class="form-group floating-label-form-group controls">
                         <label>Message</label>
-                        <textarea asp-for="Message" id="Message" rows="5" class="form-control" required data-validation-required-message="Please enter a message." placeholder="Message"></textarea>
+                        <textarea asp-for="Message" rows="5" class="form-control" required data-validation-required-message="Please enter a message." placeholder="Message"></textarea>
                         <p class="help-block text-danger"></p>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
     <script>
         //Default font size but not for placeholder...
         $('#Message').summernote({
-            placeholder: "Message"
+            placeholder: "Post Body"
         });
     </script>
 }
