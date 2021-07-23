@@ -170,7 +170,7 @@ namespace SudiBlog.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<byte[]>("ImageDate")
+                    b.Property<byte[]>("ImageData")
                         .HasColumnType("bytea");
 
                     b.Property<string>("Name")

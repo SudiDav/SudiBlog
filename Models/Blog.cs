@@ -22,7 +22,7 @@ namespace SudiBlog.Models
         [Display(Name = "Updated Date")]
         public DateTime? Updated { get; set; }
         [Display(Name = "Blog Image")]
-        public byte[] ImageDate { get; set; }
+        public byte[] ImageData { get; set; }
         [Display(Name = "Image Type")]
         public string ContentType { get; set; }
         [NotMapped]
