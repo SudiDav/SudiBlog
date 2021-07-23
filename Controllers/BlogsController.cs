@@ -69,7 +69,7 @@ namespace SudiBlog.Controllers
                 blog.Created = DateTime.Now;
 
                 blog.BlogUserId = _userManager.GetUserId(User);
-                blog.ImageDate = await _imageService.EncodeImageAsync(blog.Image);
+                blog.ImageData = await _imageService.EncodeImageAsync(blog.Image);
                 blog.ContentType = _imageService.ContentType(blog.Image);
                 _context.Add(blog);
                 await _context.SaveChangesAsync();
@@ -110,6 +110,8 @@ namespace SudiBlog.Controllers
             {
                 try
                 {
+
+
                     _context.Update(blog);
                     await _context.SaveChangesAsync();
                 }
