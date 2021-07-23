@@ -1,4 +1,7 @@
-﻿@model IEnumerable<SudiBlog.Models.Post>
+﻿@using SudiBlog.Services
+@using SudiBlog.Models
+@inject IImageService imageService
+@model IEnumerable<Post>
 
 @{ ViewData["Title"] = "Index"; }
 
@@ -11,16 +14,13 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Abstract)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReadyStatus)
             </th>
 
             <th></th>
@@ -30,6 +30,9 @@
         @foreach (var item in Model)
         {
 <tr>
+    <td>
+        <img src="@imageService.DecodeImage(item.ImageData, item.ContentType)" alt="Image" style="width:50px; height:50px; border-radius: 50%;" />
+    </td>
     <td>
         @Html.DisplayFor(modelItem => item.Title)
     </td>
