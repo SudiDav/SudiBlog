@@ -2,3 +2,7 @@
     line-height: .7;
     border-radius: 20px;
 }
+
+option {
+    font-weight: bold;
+}
