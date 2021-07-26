@@ -37,9 +37,9 @@ namespace SudiBlog.Controllers
         }
 
         // GET: Posts/Details/5
-        public async Task<IActionResult> Details(string slug)
+        public async Task<IActionResult> Details(int? id)
         {
-            if (slug == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -48,7 +48,7 @@ namespace SudiBlog.Controllers
                 .Include(p => p.Blog)
                 .Include(p => p.BlogUser)
                 .Include(p => p.Tags)
-                .FirstOrDefaultAsync(m => m.Slug == slug);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
                 return NotFound();
@@ -121,19 +121,21 @@ namespace SudiBlog.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts.FindAsync(id);
+            var post = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
             if (post == null)
             {
                 return NotFound();
             }
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Name", post.BlogId);
+            ViewData["TagValues"] = string.Join(",", post.Tags.Select(t => t.Text));
             return View(post);
         }
 
         // POST: Posts/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Content,ReadyStatus,Image")] Post post, IFormFile newImage)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Content,ReadyStatus,Image")] Post post,
+                    IFormFile newImage, List<string> tagValues)
         {
             if (id != post.Id)
             {
@@ -144,7 +146,7 @@ namespace SudiBlog.Controllers
             {
                 try
                 {
-                    var newPost = await _context.Posts.FindAsync(post.Id);
+                    var newPost = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == post.Id);
                     newPost.Updated = DateTime.Now;
                     newPost.Title = post.Title;
                     newPost.Abstract = post.Abstract;
@@ -155,6 +157,22 @@ namespace SudiBlog.Controllers
                     {
                         newPost.ImageData = await _imageService.EncodeImageAsync(newImage);
                         newPost.ContentType = _imageService.ContentType(newImage);
+                    }
+
+                    // revome tags associted with the post 
+
+                    _context.Tags.RemoveRange(newPost.Tags);
+
+                    // add tag to the list of tags in a post
+
+                    foreach (var tagText in tagValues)
+                    {
+                        _context.Add(new Tag()
+                        {
+                            PostId = post.Id,
+                            BlogUserId = newPost.BlogUserId,
+                            Text = tagText
+                        });
                     }
 
                     await _context.SaveChangesAsync();
