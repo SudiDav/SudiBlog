@@ -87,7 +87,7 @@ namespace SudiBlog.Controllers
 
                 var validattionError = false;
 
-                if (!string.IsNullOrEmpty(slug))
+                if (string.IsNullOrEmpty(slug))
                 {
                     validattionError = true;
                     ModelState.AddModelError("", "The Title you provided cannot be used as it result in an empty slug!");
@@ -162,22 +162,38 @@ namespace SudiBlog.Controllers
             {
                 try
                 {
-                    var newPost = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == post.Id);
-                    newPost.Updated = DateTime.Now;
-                    newPost.Title = post.Title;
-                    newPost.Abstract = post.Abstract;
-                    newPost.Content = post.Content;
-                    newPost.ReadyStatus = post.ReadyStatus;
+                    var originalPost = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == post.Id);
+                    originalPost.Updated = DateTime.Now;
+                    originalPost.Title = post.Title;
+                    originalPost.Abstract = post.Abstract;
+                    originalPost.Content = post.Content;
+                    originalPost.ReadyStatus = post.ReadyStatus;
+
+                    var newSlug = _slugService.UrlFriendly(post.Title);
+                    if (newSlug != originalPost.Slug)
+                    {
+                        if (_slugService.IsUnique(newSlug))
+                        {
+                            originalPost.Title = post.Title;
+                            originalPost.Slug = newSlug;
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Title", "This Title cannot be used as it is results in a duplicate slug!");
+                            ViewData["TagValues"] = string.Join(",", post.Tags.Select(t => t.Text));
+                            return View(post);
+                        }
+                    }
 
                     if (newImage is not null)
                     {
-                        newPost.ImageData = await _imageService.EncodeImageAsync(newImage);
-                        newPost.ContentType = _imageService.ContentType(newImage);
+                        originalPost.ImageData = await _imageService.EncodeImageAsync(newImage);
+                        originalPost.ContentType = _imageService.ContentType(newImage);
                     }
 
                     // revome tags associted with the post 
 
-                    _context.Tags.RemoveRange(newPost.Tags);
+                    _context.Tags.RemoveRange(originalPost.Tags);
 
                     // add tag to the list of tags in a post
 
@@ -186,7 +202,7 @@ namespace SudiBlog.Controllers
                         _context.Add(new Tag()
                         {
                             PostId = post.Id,
-                            BlogUserId = newPost.BlogUserId,
+                            BlogUserId = originalPost.BlogUserId,
                             Text = tagText
                         });
                     }
