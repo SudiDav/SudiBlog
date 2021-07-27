@@ -83,9 +83,25 @@ namespace SudiBlog.Controllers
                 post.ContentType = _imageService.ContentType(post.Image);
 
                 var slug = _slugService.UrlFriendly(post.Title);
+
+
+                var validattionError = false;
+
+                if (!string.IsNullOrEmpty(slug))
+                {
+                    validattionError = true;
+                    ModelState.AddModelError("", "The Title you provided cannot be used as it result in an empty slug!");
+                }
+
+                // return back to the view if duplicate
                 if (!_slugService.IsUnique(slug))
                 {
-                    ModelState.AddModelError("Title", "The Title you provided cannot be used as it is results in a duplicate slug");
+                    validattionError = true;
+                    ModelState.AddModelError("Title", "The Title you provided cannot be used as it is results in a duplicate slug!");
+                }
+
+                if (validattionError)
+                {
                     ViewData["TagValues"] = string.Join(",", tagValues);
                     return View(post);
                 }
