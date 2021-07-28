@@ -29,8 +29,8 @@ namespace SudiBlog.Controllers
         // GET: Blogs
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Blogs.Include(b => b.BlogUser);
-            return View(await applicationDbContext.ToListAsync());
+            var applicationDbContext = await _context.Blogs.Include(b => b.BlogUser).ToListAsync();
+            return View(applicationDbContext);
         }
 
         // GET: Blogs/Details/5

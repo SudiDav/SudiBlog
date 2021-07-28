@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SudiBlog.Data;
 using SudiBlog.Models;
 using SudiBlog.Services;
 using SudiBlog.ViewModels;
@@ -12,16 +14,18 @@ namespace SudiBlog.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IBlogEmailSender _emailSender;
-
-        public HomeController(ILogger<HomeController> logger, IBlogEmailSender emailSender)
+        private readonly ApplicationDbContext _dbContext;
+        public HomeController(ILogger<HomeController> logger, IBlogEmailSender emailSender, ApplicationDbContext dbContext)
         {
             _logger = logger;
             _emailSender = emailSender;
+            _dbContext = dbContext;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var blogs = await _dbContext.Blogs.Include(b => b.BlogUser).ToListAsync();
+            return View(blogs);
         }
 
         public IActionResult About()
