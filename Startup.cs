@@ -39,6 +39,7 @@ namespace SudiBlog
             services.AddRazorPages();
 
             services.AddScoped<DataService>();
+            services.AddScoped<BlogSearchService>();
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddScoped<IBlogEmailSender, EmailService>();
             services.AddScoped<IImageService, BasicImageService>();
