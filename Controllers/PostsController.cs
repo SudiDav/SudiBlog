@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SudiBlog.Data;
+using SudiBlog.Enums;
 using SudiBlog.Models;
 using SudiBlog.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace SudiBlog.Controllers
 {
@@ -36,14 +38,21 @@ namespace SudiBlog.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        public async Task<IActionResult> BlogPostIndex(int? id)
+        public async Task<IActionResult> BlogPostIndex(int? id, int? page)
         {
             if (id is null)
             {
                 return NotFound();
             }
-            var posts = await _context.Posts.Where(p => p.BlogId == id).ToListAsync();
-            return View("Index", posts);
+
+            var pageNumber = page ?? 1;
+            var pageSize = 5;
+
+            var posts = await _context.Posts
+                .Where(p => p.BlogId == id && p.ReadyStatus == ReadyStatus.ProductionReady)
+                .OrderByDescending(p => p.Created)
+                .ToPagedListAsync(pageNumber, pageSize);
+            return View(posts);
         }
 
         public async Task<IActionResult> Details(string slug)
@@ -171,9 +180,14 @@ namespace SudiBlog.Controllers
             {
                 try
                 {
-                    var originalPost = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == post.Id);
+
+                    var originalPost = await _context.Posts
+                            .Include(p => p.Tags)
+                            .FirstOrDefaultAsync(p => p.Id == post.Id);
+
                     originalPost.Updated = DateTime.Now;
                     originalPost.Title = post.Title;
+                    originalPost.BlogId = post.BlogId;
                     originalPost.Abstract = post.Abstract;
                     originalPost.Content = post.Content;
                     originalPost.ReadyStatus = post.ReadyStatus;
