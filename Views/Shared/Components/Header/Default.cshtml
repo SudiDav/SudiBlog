@@ -7,11 +7,11 @@
                     <h1>Trykatch</h1>
                     <span class="subheading">Never stop learning!</span>
                     <hr />
-                    <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-2 my-2 my-md-0">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Search posts for..." />
+                    <form asp-action="SearchIndex" asp-controller="Posts" class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-2 my-2 my-md-0">
+                        <div class="input-group mt-2">
+                            <input type="text" name="SearchTerm" class="form-control" placeholder="Search posts for..." />
                             <div class="input-group-append">
-                                <button class="btn btn-dark" style="padding: 0 10px 0 10px; border-radius: 5px;"><i class="fas fa-search"></i></button>
+                                <button class="btn btn-dark btn-block btn-sm" style="padding: 0 10px 0 10px; border-radius: 5px;"><i class="fas fa-search"></i></button>
                             </div>
                         </div>
                     </form>
