@@ -16,6 +16,7 @@ using X.PagedList;
 
 namespace SudiBlog.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -32,6 +33,7 @@ namespace SudiBlog.Controllers
             _userManager = userManager;
             _blogSearchService = blogSearchService;
         }
+        [AllowAnonymous]
         public async Task<IActionResult> SearchIndex(int? page, string searchTerm)
         {
             ViewData["SearchTerm"] = searchTerm;
@@ -43,12 +45,14 @@ namespace SudiBlog.Controllers
             return View(await posts.ToPagedListAsync(pageNumber, pageSize));
         }
         // GET: Posts
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Posts.Include(p => p.Blog).Include(p => p.BlogUser);
             return View(await applicationDbContext.ToListAsync());
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> BlogPostIndex(int? id, int? page)
         {
             if (id is null)
@@ -66,6 +70,7 @@ namespace SudiBlog.Controllers
             return View(posts);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Details(string slug)
         {
             if (string.IsNullOrEmpty(slug))
@@ -87,7 +92,6 @@ namespace SudiBlog.Controllers
         }
 
         // GET: Posts/Create
-        [Authorize]
         public IActionResult Create()
         {
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Name");

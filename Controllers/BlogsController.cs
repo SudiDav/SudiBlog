@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace SudiBlog.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class BlogsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -27,6 +28,7 @@ namespace SudiBlog.Controllers
         }
 
         // GET: Blogs
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = await _context.Blogs.Include(b => b.BlogUser).ToListAsync();
@@ -34,6 +36,7 @@ namespace SudiBlog.Controllers
         }
 
         // GET: Blogs/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -53,7 +56,7 @@ namespace SudiBlog.Controllers
         }
 
         // GET: Blogs/Create
-        [Authorize]
+
         public IActionResult Create()
         {
             ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id");
