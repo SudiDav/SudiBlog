@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SudiBlog.Data;
+using SudiBlog.Enums;
 using SudiBlog.Models;
 using SudiBlog.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace SudiBlog.Controllers
 {
@@ -20,15 +22,26 @@ namespace SudiBlog.Controllers
         private readonly ISlugService _slugService;
         private readonly IImageService _imageService;
         private readonly UserManager<BlogUser> _userManager;
+        private readonly BlogSearchService _blogSearchService;
 
-        public PostsController(ApplicationDbContext context, ISlugService slugService, IImageService imageService, UserManager<BlogUser> userManager)
+        public PostsController(ApplicationDbContext context, ISlugService slugService, IImageService imageService, UserManager<BlogUser> userManager, BlogSearchService blogSearchService)
         {
             _context = context;
             _slugService = slugService;
             _imageService = imageService;
             _userManager = userManager;
+            _blogSearchService = blogSearchService;
         }
+        public async Task<IActionResult> SearchIndex(int? page, string searchTerm)
+        {
+            ViewData["SearchTerm"] = searchTerm;
 
+            var pageNumber = page ?? 1;
+            var pageSize = 5;
+
+            var posts = _blogSearchService.Search(searchTerm);
+            return View(await posts.ToPagedListAsync(pageNumber, pageSize));
+        }
         // GET: Posts
         public async Task<IActionResult> Index()
         {
@@ -36,14 +49,21 @@ namespace SudiBlog.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        public async Task<IActionResult> BlogPostIndex(int? id)
+        public async Task<IActionResult> BlogPostIndex(int? id, int? page)
         {
             if (id is null)
             {
                 return NotFound();
             }
-            var posts = await _context.Posts.Where(p => p.BlogId == id).ToListAsync();
-            return View("Index", posts);
+
+            var pageNumber = page ?? 1;
+            var pageSize = 5;
+
+            var posts = await _context.Posts
+                .Where(p => p.BlogId == id && p.ReadyStatus == ReadyStatus.ProductionReady)
+                .OrderByDescending(p => p.Created)
+                .ToPagedListAsync(pageNumber, pageSize);
+            return View(posts);
         }
 
         public async Task<IActionResult> Details(string slug)
@@ -171,9 +191,14 @@ namespace SudiBlog.Controllers
             {
                 try
                 {
-                    var originalPost = await _context.Posts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == post.Id);
+
+                    var originalPost = await _context.Posts
+                            .Include(p => p.Tags)
+                            .FirstOrDefaultAsync(p => p.Id == post.Id);
+
                     originalPost.Updated = DateTime.Now;
                     originalPost.Title = post.Title;
+                    originalPost.BlogId = post.BlogId;
                     originalPost.Abstract = post.Abstract;
                     originalPost.Content = post.Content;
                     originalPost.ReadyStatus = post.ReadyStatus;

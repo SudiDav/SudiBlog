@@ -2,11 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SudiBlog.Data;
+using SudiBlog.Enums;
 using SudiBlog.Models;
 using SudiBlog.Services;
 using SudiBlog.ViewModels;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace SudiBlog.Controllers
 {
@@ -22,10 +25,18 @@ namespace SudiBlog.Controllers
             _dbContext = dbContext;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            var blogs = await _dbContext.Blogs.Include(b => b.BlogUser).ToListAsync();
-            return View(blogs);
+            var pageNumber = page ?? 1;
+            var pageSize = 5;
+
+            var blogs = _dbContext.Blogs.Include(b => b.BlogUser).Where(b => b.Posts
+               .Any(p => p.ReadyStatus == ReadyStatus.ProductionReady))
+                .OrderByDescending(b => b.Created)
+                .ToPagedListAsync(pageNumber, pageSize);
+
+
+            return View(await blogs);
         }
 
         public IActionResult About()
