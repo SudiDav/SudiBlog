@@ -1,8 +1,10 @@
-﻿@using SudiBlog.Services
+﻿@using Microsoft.AspNetCore.Identity
+@using SudiBlog.Services
 @using SudiBlog.Models
 
 @model Post
 @inject IImageService imageService
+@inject UserManager<BlogUser> userManager
 
 @{ ViewData["Title"] = "Details"; }
 
@@ -67,15 +69,45 @@ else
         <h4>@comment.BlogUser.FirstName</h4>
         <small><i>Posted on @comment.Created.ToString("MMM dd, yyyy")</i></small>
         <p>@comment.Body</p>
-    </div>
-</div>}
-
+        @if (comment.Moderated is null && comment.Deleted is null && comment.BlogUserId == userManager.GetUserId(User))
+        {
 <hr />
+                    <button data-toggle="model" data-target="#editModal" class="btn-sm btn-dark float-left font-weight-bold">Update</button>}
+    </div>
+</div>
 
-@if (Model.Comments.Count <= 1)
-{
+                <hr />
 
-<span class="btn btn-sm btn-dark btn-block">@Model.Comments.Count Comment</span> }
-else
-{
-<span class="btn btn-sm btn-dark btn-block">@Model.Comments.Count Comments</span>}
+                                @if (Model.Comments.Count <= 1)
+                                {
+
+                <button id="commentSection" class="btn btn-sm btn-dark btn-block">@Model.Comments.Count Comment</button> }
+            else
+            {
+<button id="commentSection" class="btn btn-sm btn-dark btn-block">@Model.Comments.Count Comments</button>} <!--Modal-->
+
+                                                <div class="modal" id="editModal">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">Updating Comment...</h4>
+                                                            </div>
+
+                                                            <!--Modal Body-->
+                                                            <div class="modal-body">
+                                                                <form asp-action="Edit" asp-controller="Comments">
+                                                                    @Html.Hidden("Id", comment.Id)
+                                                                    <div class="form-group">
+                                                                        <textarea name="Body" class="form-control" required>@comment.Body</textarea>
+
+                                                                        <button class="btn-sm btn-dark border-success font-weight-bold" type="submit">UPDATE</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <!---Modal footer-->
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn-dark btn-sm font-weight-bold" data-dismiss="modal">CLOSE</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>}
