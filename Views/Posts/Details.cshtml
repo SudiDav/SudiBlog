@@ -1,4 +1,8 @@
-﻿@model SudiBlog.Models.Post
+﻿@using SudiBlog.Services
+@using SudiBlog.Models
+
+@model Post
+@inject IImageService imageService
 
 @{ ViewData["Title"] = "Details"; }
 
@@ -32,5 +36,46 @@
 
 <hr />
 
-<!--Displaying comment realted to this Post-->
+<!--Displaying comment related to this Post-->
+
+<div>
+    @if (User.Identity.IsAuthenticated)
+    {
+<form asp-action="Create" asp-controller="Comments" method="post">
+    @Html.Hidden("PostId", Model.Id)
+
+    <div class="form-group">
+        <label class="h2 custom-control-label font-weight-bold">Add Comment</label>
+        <textarea name="body" class="form-control" rows="10"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-block btn-sm btn-dark align-content-center">Comment</button>
+</form>}
+else
+{
+<a class="btn btn-block btn-dark btn-sm" asp-area="Identity" asp-page="/Account/Login">Login To Comment</a>}
+</div>
+
 <!--Display the image of the comment's Author -->
+<hr />
+
+@foreach (var comment in Model.Comments)
+{
+<div class="media media-border p-0 mb-2 bg-light">
+    <img class="mr-3 mt-3 rounded-circle" style="width:60px;" src="@imageService.DecodeImage(comment.BlogUser.ImageData, comment.BlogUser.ContentType)" alt="@comment.BlogUser.FullName" />
+    <div class="media-body">
+        <h4>@comment.BlogUser.FirstName</h4>
+        <small><i>Posted on @comment.Created.ToString("MMM dd, yyyy")</i></small>
+        <p>@comment.Body</p>
+    </div>
+</div>}
+
+<hr />
+
+@if (Model.Comments.Count <= 1)
+{
+
+<span class="btn btn-sm btn-dark btn-block">@Model.Comments.Count Comment</span> }
+else
+{
+<span class="btn btn-sm btn-dark btn-block">@Model.Comments.Count Comments</span>}
