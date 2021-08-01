@@ -17,3 +17,6 @@ This is a simple blog system build in ASP.NET CORE 5 MVC and Entity framework co
 
 3. Run `dotnet restore` to restore all nuggets packages
 4. Run `dotnet watch run` to run the environment locally.
+
+## Note
+  The migration is run autamatically when the application start if the database is not created.
