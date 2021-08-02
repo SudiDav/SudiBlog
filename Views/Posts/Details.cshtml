@@ -31,7 +31,7 @@
         <div class="col text-center">
             @foreach (var tag in Model.Tags)
             {
-<a class="btn btn-sm btn-primary btn-outline-dark m-md-1" asp-action="TagIndex" asp-route-tag="@tag.Text.ToLower()">#@tag.Text</a>}
+                <a class="btn btn-sm btn-primary btn-outline-dark m-md-1" asp-action="TagIndex" asp-route-tag="@tag.Text.ToLower()">#@tag.Text</a>}
         </div>
     </div>
 </article>
@@ -43,19 +43,19 @@
 <div>
     @if (User.Identity.IsAuthenticated)
     {
-<form asp-action="Create" asp-controller="Comments" method="post">
-    @Html.Hidden("PostId", Model.Id)
+        <form asp-action="Create" asp-controller="Comments" method="post">
+            @Html.Hidden("PostId", Model.Id)
 
-    <div class="form-group">
-        <label class="h2 custom-control-label font-weight-bold">Add Comment</label>
-        <textarea name="body" class="form-control" rows="10"></textarea>
-    </div>
+            <div class="form-group">
+                <label class="h2 custom-control-label font-weight-bold">Add Comment</label>
+                <textarea name="body" class="form-control" rows="10"></textarea>
+            </div>
 
-    <button type="submit" class="btn btn-block btn-sm btn-dark align-content-center">Comment</button>
-</form>}
-else
-{
-<a class="btn btn-block btn-dark btn-sm" asp-area="Identity" asp-page="/Account/Login">Login To Comment</a>}
+            <button type="submit" class="btn btn-block btn-sm btn-dark align-content-center">Comment</button>
+        </form>}
+    else
+    {
+        <a class="btn btn-block btn-dark btn-sm" asp-area="Identity" asp-page="/Account/Login">Login To Comment</a>}
 </div>
 
 <!--Display the image of the comment's Author -->
@@ -63,51 +63,51 @@ else
 
 @foreach (var comment in Model.Comments)
 {
-<div class="media media-border p-0 mb-2 bg-light">
-    <img class="mr-3 mt-3 rounded-circle" style="width:60px;" src="@imageService.DecodeImage(comment.BlogUser.ImageData, comment.BlogUser.ContentType)" alt="@comment.BlogUser.FullName" />
-    <div class="media-body">
-        <h4>@comment.BlogUser.FirstName</h4>
-        <small><i>Posted on @comment.Created.ToString("MMM dd, yyyy")</i></small>
-        <p>@comment.Body</p>
-        @if (comment.Moderated is null && comment.Deleted is null && comment.BlogUserId == userManager.GetUserId(User))
-        {
-<hr />
-                    <button data-toggle="model" data-target="#editModal" class="btn-sm btn-dark float-left font-weight-bold">Update</button>}
-    </div>
-</div>
-
-                <hr />
-
-                                @if (Model.Comments.Count <= 1)
-                                {
-
-                <button id="commentSection" class="btn btn-sm btn-dark btn-block">@Model.Comments.Count Comment</button> }
-            else
+    <div class="media media-border p-0 mb-2 bg-light">
+        <img class="mr-3 mt-3 rounded-circle" style="width:60px;" src="@imageService.DecodeImage(comment.BlogUser.ImageData, comment.BlogUser.ContentType)" alt="@comment.BlogUser.FullName" />
+        <div class="media-body">
+            <h4>@comment.BlogUser.FirstName</h4>
+            <small><i>Posted on @comment.Created.ToString("MMM dd, yyyy")</i></small>
+            <p>@comment.Body</p>
+            @if (comment.Moderated is null && comment.Deleted is null && comment.BlogUserId == userManager.GetUserId(User))
             {
-<button id="commentSection" class="btn btn-sm btn-dark btn-block">@Model.Comments.Count Comments</button>} <!--Modal-->
+                <hr />
+                <button data-toggle="model" data-target="#editModal" class="btn-sm btn-dark float-left font-weight-bold">Update</button>}
+        </div>
+    </div>
 
-                                                <div class="modal" id="editModal">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h4 class="modal-title">Updating Comment...</h4>
-                                                            </div>
+    <hr />
 
-                                                            <!--Modal Body-->
-                                                            <div class="modal-body">
-                                                                <form asp-action="Edit" asp-controller="Comments">
-                                                                    @Html.Hidden("Id", comment.Id)
-                                                                    <div class="form-group">
-                                                                        <textarea name="Body" class="form-control" required>@comment.Body</textarea>
+    @if (Model.Comments.Count <= 1)
+    {
 
-                                                                        <button class="btn-sm btn-dark border-success font-weight-bold" type="submit">UPDATE</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                            <!---Modal footer-->
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn-dark btn-sm font-weight-bold" data-dismiss="modal">CLOSE</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>}
+        <button id="commentSection" class="btn btn-sm btn-dark btn-block">@Model.Comments.Count Comment</button> }
+    else
+    {
+        <button id="commentSection" class="btn btn-sm btn-dark btn-block">@Model.Comments.Count Comments</button>} <!--Modal-->
+
+    <div class="modal" id="editModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Updating Comment...</h4>
+                </div>
+
+                <!--Modal Body-->
+                <div class="modal-body">
+                    <form asp-action="Edit" asp-controller="Comments">
+                        @Html.Hidden("Id", comment.Id)
+                        <div class="form-group">
+                            <textarea name="Body" class="form-control" required>@comment.Body</textarea>
+
+                            <button class="btn-sm btn-dark border-success font-weight-bold" type="submit">UPDATE</button>
+                        </div>
+                    </form>
+                </div>
+                <!---Modal footer-->
+                <div class="modal-footer">
+                    <button type="button" class="btn-dark btn-sm font-weight-bold" data-dismiss="modal">CLOSE</button>
+                </div>
+            </div>
+        </div>
+    </div>}
