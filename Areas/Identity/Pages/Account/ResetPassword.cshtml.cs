@@ -25,7 +25,7 @@ namespace SudiBlog.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
+            [Required] 
             [EmailAddress]
             public string Email { get; set; }
 

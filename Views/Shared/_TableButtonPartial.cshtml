@@ -8,11 +8,11 @@
 
         @if (User.IsInRole("Administrator"))
         {
-<a class="btn btn-danger text-white" asp-action="Delete" asp-route-Id="@Model">
-    <i class="fas fa-trash-alt"></i>
-</a>
-                <a class="btn btn-dark text-white" asp-action="Edit" asp-route-Id="@Model">
-                    <i class="fas fa-edit"></i>
-                </a>}
+        <a class="btn btn-danger text-white" asp-action="Delete" asp-route-Id="@Model">
+            <i class="fas fa-trash-alt"></i>
+        </a>
+        <a class="btn btn-dark text-white" asp-action="Edit" asp-route-Id="@Model">
+            <i class="fas fa-edit"></i>
+        </a>}
     </div>
 </td>

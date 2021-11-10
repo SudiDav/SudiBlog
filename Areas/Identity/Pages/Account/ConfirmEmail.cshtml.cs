@@ -18,6 +18,7 @@ namespace SudiBlog.Areas.Identity.Pages.Account
         {
             _userManager = userManager;
         }
+        public string ReturnUrl { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }

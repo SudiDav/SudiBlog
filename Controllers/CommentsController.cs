@@ -33,6 +33,7 @@ namespace SudiBlog.Controllers
             var moderatedComments = await _context.Comments.Where(c => c.Moderated != null).ToListAsync();
             return View("Index", moderatedComments);
         }
+
         //public async Task<IActionResult> DeletedIndex()
         //{
         //    var deletedComments = await _context.Comments.Where(c => c.Deleted = true).ToListAsync();
@@ -45,15 +46,6 @@ namespace SudiBlog.Controllers
             var allComments = await _context.Comments.ToListAsync();
             return View("Index", allComments);
         }
-
-        // GET: Comments/Create
-        //public IActionResult Create()
-        //{
-        //    ViewData["BlogUserId"] = new SelectList(_context.Users, "Id", "Id");
-        //    ViewData["ModeratorId"] = new SelectList(_context.Users, "Id", "Id");
-        //    ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Abstract");
-        //    return View();
-        //}
 
         // POST: Comments/Create
         [HttpPost]
@@ -123,6 +115,44 @@ namespace SudiBlog.Controllers
                         throw;
                     }
                 }
+                return RedirectToAction("Details", "Posts", new { slug = newComment.Post.Slug }, "commentSection");
+            }
+
+            return View(comment);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Moderate(int id, [Bind("Id,Body,ModeratedBody,ModerationType")] Comment comment)
+        {
+            if (id != comment.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var newComment = await _context.Comments.Include(c => c.Post).FirstOrDefaultAsync(c => c.Id == comment.Id);
+                try
+                {
+                    newComment.ModeratedBody = comment.ModeratedBody;
+                    newComment.ModerationType = comment.ModerationType;
+
+                    newComment.Moderated = DateTime.Now;
+                    newComment.ModeratorId = _userManager.GetUserId(User);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CommentExists(comment.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
                 return RedirectToAction("Details", "Posts", new { slug = newComment.Post.Slug }, "commentSection");
             }
 

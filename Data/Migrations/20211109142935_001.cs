@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using System;
 
 namespace SudiBlog.Data.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class _001 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,6 +29,7 @@ namespace SudiBlog.Data.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    DisplayName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     ImageData = table.Column<byte[]>(type: "bytea", nullable: true),
                     ContentType = table.Column<string>(type: "text", nullable: true),
                     FacebookUrl = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
@@ -266,16 +267,15 @@ namespace SudiBlog.Data.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     PostId = table.Column<int>(type: "integer", nullable: false),
-                    BlogUserId = table.Column<int>(type: "integer", nullable: false),
-                    Text = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
-                    BlogUserId1 = table.Column<string>(type: "text", nullable: true)
+                    BlogUserId = table.Column<string>(type: "text", nullable: true),
+                    Text = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tags", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tags_AspNetUsers_BlogUserId1",
-                        column: x => x.BlogUserId1,
+                        name: "FK_Tags_AspNetUsers_BlogUserId",
+                        column: x => x.BlogUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -355,9 +355,9 @@ namespace SudiBlog.Data.Migrations
                 column: "BlogUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tags_BlogUserId1",
+                name: "IX_Tags_BlogUserId",
                 table: "Tags",
-                column: "BlogUserId1");
+                column: "BlogUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tags_PostId",
