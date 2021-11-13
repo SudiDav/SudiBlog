@@ -96,7 +96,9 @@ namespace SudiBlog.Controllers
             if (ModelState.IsValid)
             {
                 // retrieve comment
-                var newComment = await _context.Comments.Include(c => c.Post).FirstOrDefaultAsync(c => c.Id == comment.Id);
+                var newComment = await _context.Comments
+                    .Include(c => c.Post)
+                    .FirstOrDefaultAsync(c => c.Id == comment.Id);
                 try
                 {
                     newComment.Body = comment.Body;
@@ -132,7 +134,9 @@ namespace SudiBlog.Controllers
 
             if (ModelState.IsValid)
             {
-                var newComment = await _context.Comments.Include(c => c.Post).FirstOrDefaultAsync(c => c.Id == comment.Id);
+                var newComment = await _context.Comments
+                    .Include(c => c.Post)
+                    .FirstOrDefaultAsync(c => c.Id == comment.Id);
                 try
                 {
                     newComment.ModeratedBody = comment.ModeratedBody;
@@ -140,6 +144,8 @@ namespace SudiBlog.Controllers
 
                     newComment.Moderated = DateTime.Now;
                     newComment.ModeratorId = _userManager.GetUserId(User);
+
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -183,12 +189,12 @@ namespace SudiBlog.Controllers
         // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, string slug)
         {
             var comment = await _context.Comments.FindAsync(id);
             _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Posts", new { slug }, "commentSection");
         }
 
         private bool CommentExists(int id)

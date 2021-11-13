@@ -1,11 +1,11 @@
-﻿<header class="masthead" style="background-image: url('/assets/img/home-bg.jpg')">
+﻿<header class="masthead" style="background-image: url(@ViewData["HeaderImage"])">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto">
                 <div class="site-heading">
-                    <h1>Trykatch</h1>
-                    <span class="subheading">Never stop learning!</span>
+                    <h1>@ViewData["MainText"]</h1>
+                    <span class="subheading">@ViewData["SubText"]</span>
                     <hr />
                     <form asp-action="SearchIndex" asp-controller="Posts" class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-2 my-2 my-md-0">
                         <div class="input-group mt-2">
