@@ -29,10 +29,10 @@ namespace SudiBlog
             //        Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseNpgsql(
-                   Configuration.GetConnectionString("DefaultConnection")));
-
-
+            {
+                options.UseNpgsql(ConnectionService.GetConectionString(Configuration));
+            });
+              
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)

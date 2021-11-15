@@ -21,9 +21,9 @@
                <img class="card-img-top" src="@_imageService.DecodeImage(blog.ImageData, blog.ContentType)"/>
                <div class="card-body text-center">
 
-                   <div class="bg-bg-warning">
+                   <div class="bg-warning">
                        <hr class="card-hr"/>
-                       <h5 class="card-card-title">@blog.Name</h5>
+                       <h5 class="card-title">@blog.Name</h5>
                        <hr class="card-hr"/>
                    </div>
                    <div>
@@ -94,7 +94,7 @@
 @section Scripts{
     <script>
         var swalMsg= '@TempData["SweetAlert"]'
-        if(swalMsg !== ""){
+        if(swalMsg != ""){
             Swal.fire({
                 icon: 'success',
                 title: swalMsg,

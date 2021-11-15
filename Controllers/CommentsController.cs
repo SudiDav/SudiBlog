@@ -41,11 +41,11 @@ namespace SudiBlog.Controllers
         //    perform a soft delete
         //}
 
-        public async Task<IActionResult> Index()
-        {
-            var allComments = await _context.Comments.ToListAsync();
-            return View("Index", allComments);
-        }
+        //public async Task<IActionResult> Index()
+        //{
+        //    var allComments = await _context.Comments.ToListAsync();
+        //    return View("Index", allComments);
+        //}
 
         // POST: Comments/Create
         [HttpPost]
