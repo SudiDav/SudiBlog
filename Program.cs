@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using SudiBlog.Services;
-using System.Threading.Tasks;
+﻿using SudiBlog.Services;
 
 namespace SudiBlog
 {
@@ -18,7 +14,7 @@ namespace SudiBlog
                                   .GetRequiredService<DataService>();
             await dataService.ManageDataAsync();
 
-            host.Run();
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
